@@ -20,25 +20,19 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                dir('test-app') {
-                    sh 'npm install'
-                }
+                sh 'npm install'
             }
         }
 
         stage('Build React App') {
             steps {
-                dir('test-app') {
-                    sh 'npm run build'
-                }
+                sh 'npm run build'
             }
         }
 
         stage('Docker Build') {
             steps {
-                dir('test-app') {
-                    sh 'docker build -t $DOCKER_IMAGE:latest .'
-                }
+                sh 'docker build -t $DOCKER_IMAGE:latest .'
             }
         }
 
@@ -49,12 +43,10 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    dir('test-app') {
-                        sh '''
-                        docker login -u $DOCKER_USER -p $DOCKER_PASS
-                        docker push $DOCKER_IMAGE:latest
-                        '''
-                    }
+                    sh '''
+                    docker login -u $DOCKER_USER -p $DOCKER_PASS
+                    docker push $DOCKER_IMAGE:latest
+                    '''
                 }
             }
         }
