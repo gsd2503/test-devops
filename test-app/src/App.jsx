@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <h1>Hello from React</h1>
+      <h1>Hello from React - docker - jenkins</h1>
     </>
   )
 }
