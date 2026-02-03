@@ -14,25 +14,31 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 git branch: 'main',
-                url: 'https://github.com/gsd2503/test-devops.git'
+                    url: 'https://github.com/gsd2503/test-devops.git'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                dir('test-app') {
+                    sh 'npm install'
+                }
             }
         }
 
         stage('Build React App') {
             steps {
-                sh 'npm run build'
+                dir('test-app') {
+                    sh 'npm run build'
+                }
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:latest .'
+                dir('test-app') {
+                    sh 'docker build -t $DOCKER_IMAGE:latest .'
+                }
             }
         }
 
@@ -43,10 +49,12 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh '''
-                    docker login -u $DOCKER_USER -p $DOCKER_PASS
-                    docker push $DOCKER_IMAGE:latest
-                    '''
+                    dir('test-app') {
+                        sh '''
+                        docker login -u $DOCKER_USER -p $DOCKER_PASS
+                        docker push $DOCKER_IMAGE:latest
+                        '''
+                    }
                 }
             }
         }
